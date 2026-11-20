@@ -1,0 +1,3 @@
+# Put publicly accessible video URLs here. One per line; comments are ignored.
+# https://www.youtube.com/watch?v=dQw4w9WgXcQ
+# https://www.tiktok.com/@example/video/1234567890

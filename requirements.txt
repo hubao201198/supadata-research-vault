@@ -1,0 +1,3 @@
+# Pin the *official* SDK to its 2026-09-16 Git commit with transcript.get_job_status.
+# PyPI currently publishes 1.6.0, while this 1.7.0 API is already available upstream.
+supadata @ git+https://github.com/supadata-ai/py.git@35b369f30ad8c9de10957a922265e51c586b9cc6

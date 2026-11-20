@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "supadata-research-vault"
+version = "0.1.0"
+description = "Local SQLite full-text research vault powered by the official Supadata SDK"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "hubao201198"}]
+dependencies = [
+    "supadata @ git+https://github.com/supadata-ai/py.git@35b369f30ad8c9de10957a922265e51c586b9cc6",
+]
+keywords = ["supadata", "transcript", "sqlite", "fts5", "youtube", "markdown", "research"]
+
+[project.scripts]
+research-vault = "research_vault.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["research_vault*"]

@@ -32,7 +32,6 @@ jobs:
           for path in paths:
               path.unlink()
           Path(".upload").rmdir()
-          Path(".github/workflows/import.yml").unlink()
           print("Extracted", len(files), "project files")
           PY
       - name: Verify all offline tests

@@ -1,0 +1,46 @@
+name: Import prepared SDK project
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    if: contains(github.event.head_commit.message, 'Import complete bundle')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expand reviewed project source
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, lzma, json
+
+          paths = [Path(f".upload/part-{i:02d}.txt") for i in range(1, 6)]
+          if not all(p.exists() for p in paths):
+              raise RuntimeError("Project bundle is incomplete")
+          encoded = "".join(p.read_text(encoding="ascii") for p in paths)
+          files = json.loads(lzma.decompress(base64.b64decode(encoded)).decode("utf-8"))
+          root = Path.cwd().resolve()
+          for name, content in files.items():
+              dest = (root / name).resolve()
+              if not dest.is_relative_to(root):
+                  raise RuntimeError(f"Invalid project path: {name}")
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              dest.write_text(content, encoding="utf-8")
+          for path in paths:
+              path.unlink()
+          Path(".upload").rmdir()
+          Path(".github/workflows/import.yml").unlink()
+          print("Extracted", len(files), "project files")
+          PY
+      - name: Verify all offline tests
+        run: python -m unittest discover -s tests -v
+      - name: Commit tested project
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish complete tested Supadata SDK research vault"
+          git push origin HEAD:main
